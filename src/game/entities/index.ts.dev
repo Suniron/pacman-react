@@ -1,0 +1,8 @@
+export class Entite {
+  name = "";
+  life = 0;
+  constructor(name: string, life: number) {
+    this.name = name;
+    this.life = life;
+  }
+}
