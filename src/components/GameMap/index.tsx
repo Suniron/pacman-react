@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { useOvermind } from "store";
-import { make } from "./grid";
+import { drawGrid } from "./grid";
 
 const GameMap: React.FC = ({}) => {
   // -- HOOKS --
@@ -20,7 +20,7 @@ const GameMap: React.FC = ({}) => {
     canvas.current?.addEventListener("click", onClick);
     console.log("vasy fait la grille poto ;)");
 
-    make(ctx, state.appSize.width);
+    drawGrid(ctx, state.appSize.width, 15);
 
     // Formerly ComponentWillUnmount (cleaning):
     return () => {

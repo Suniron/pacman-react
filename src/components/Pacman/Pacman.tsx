@@ -8,7 +8,7 @@ export const Pacman = () => {
 
   // -- RENDER --
   return (
-    <div style={{ backgroundColor: "grey" }}>
+    <div>
       <GameMap />
     </div>
   );
