@@ -1,10 +1,8 @@
-export interface appSize {
+export interface AppSize {
   height: number;
   width: number;
 }
 
-export interface State {
-  appSize: appSize;
-  canvas: HTMLCanvasElement;
-  //ctx?: CanvasRenderingContext2D;
-}
+export type State = {
+  appSize: AppSize;
+};

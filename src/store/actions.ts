@@ -1,12 +1,12 @@
 import { Action } from "overmind";
-import { appSize } from "./types";
+import { AppSize } from "./types";
 
-export const setSize: Action<appSize> = ({ state }, appSize) => {
+export const setSize: Action<AppSize> = ({ state }, appSize) => {
   state.appSize = appSize;
 };
 
-export const setCanvasContext: Action = ({ state }) => {
-  //state.ctx = state.canvas.getContext("2d") as CanvasRenderingContext2D;
+export const setActionTest: Action = ({ state }) => {
+  state.appSize.width = 1254;
 };
 
 /** 

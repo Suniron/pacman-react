@@ -13,7 +13,7 @@ ReactDOM.render(
   <Provider value={overmind}>
     <Pacman />
   </Provider>,
-  document.getElementById("canvas")
+  document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change
