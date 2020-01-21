@@ -6,7 +6,8 @@ export const setSize: Action<AppSize> = ({ state }, appSize) => {
 };
 
 export const setActionTest: Action = ({ state }) => {
-  state.appSize.width = 1254;
+  state.appSize.width *= 2;
+  state.appSize.height *= 2;
 };
 
 /** 
