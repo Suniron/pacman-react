@@ -1,5 +1,8 @@
 import { getCellIdFromCoords } from "game/map/gameMap";
-import { getCellNeighbours } from "game/map/cells";
+import {
+  getNeighboursCellIds,
+  getPathToDirectionFromCellId
+} from "game/map/cells";
 
 describe("getCellIdFromCoords()", () => {
   test("x = 10 and y = 10 should be cellID = 0", () => {
@@ -13,11 +16,41 @@ describe("getCellIdFromCoords()", () => {
   });
 });
 
-describe("getCellNeighbours()", () => {
+describe("getNeighboursCellIds()", () => {
   test("Output should be an array", () => {
-    expect(typeof getCellNeighbours(200)).toBe(typeof []);
+    expect(typeof getNeighboursCellIds(200)).toBe(typeof []);
   });
   test("Output of 16 should be [1, 15, 17, 31]", () => {
-    expect(getCellNeighbours(16).sort()).toBe([1, 15, 17, 31].sort());
+    expect(getNeighboursCellIds(16).sort()).toStrictEqual(
+      [1, 15, 17, 31].sort()
+    );
+  });
+  test("Output of 0 should be [1, 15]", () => {
+    expect(getNeighboursCellIds(0).sort()).toStrictEqual([1, 15].sort());
+  });
+  test("Output of 14 should be [13, 29]", () => {
+    expect(getNeighboursCellIds(14).sort()).toStrictEqual([13, 29].sort());
+  });
+  test("Output of 17 should be [2,16,18, 32]", () => {
+    expect(getNeighboursCellIds(17).sort()).toStrictEqual(
+      [2, 16, 18, 32].sort()
+    );
+  });
+});
+
+describe("getPathToDirectionFromCellId()", () => {
+  test("Output from cell 0 to UP should be null", () => {
+    expect(getPathToDirectionFromCellId(0, "UP")).toBeFalsy();
+  });
+
+  test("Output from cell 0 to LEFT should be null", () => {
+    expect(getPathToDirectionFromCellId(0, "LEFT")).toBeFalsy();
+  });
+  test("Output from cell 1 to DOWN should be 16", () => {
+    expect(getPathToDirectionFromCellId(1, "DOWN")).toBe(16);
+  });
+
+  test("Output from cell 17 to RIGHT should be 18", () => {
+    expect(getPathToDirectionFromCellId(17, "RIGHT")).toBe(18);
   });
 });

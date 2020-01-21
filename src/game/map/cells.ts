@@ -1,6 +1,6 @@
 import { gameBoard } from "./gameBoard";
-import { Directions } from "game/entities";
 import { MAP } from "game/settings";
+import { Direction } from "game/entities";
 
 export class Cell {
   id: number = -1;
@@ -25,13 +25,28 @@ export class Cell {
   }
 }
 
-export var cells: Array<Cell> = [];
+// -- FUNCTIONS --
+export const initCells = () => {
+  const tempCells: Array<Cell> = [];
 
-export const getCellsId = (config: {
-  ctx: CanvasRenderingContext2D;
-  width: number;
-  cellsByLine: number;
-}) => {
+  for (let column = 0; column < MAP.cellsByLine; column++) {
+    for (let row = 0; row < MAP.cellsByLine; row++) {
+      tempCells.push(
+        new Cell(
+          tempCells.length,
+          row * (MAP.width / MAP.cellsByLine),
+          column * (MAP.width / MAP.cellsByLine),
+          MAP.width / MAP.cellsByLine,
+          MAP.width / MAP.cellsByLine
+        )
+      );
+    }
+  }
+
+  return tempCells;
+};
+
+export const getCellsId = (config: { width: number; cellsByLine: number }) => {
   // Destructuring parameters:
   const { width, cellsByLine } = config;
 
@@ -50,27 +65,99 @@ export const getCellsId = (config: {
   }
 };
 
-export const assignCellsElement = () => {
+const assignCellsElement = () => {
   for (let i = 0; i < gameBoard.join().split(",").length; i++) {
     cells[i].element = parseInt(gameBoard.join().split(",")[i]);
   }
 };
 
-export const getCellNeighbours = (cellId: number) => {
+const getLeftCell = (currentCellId: number) => {
+  if (currentCellId % MAP.cellsByLine !== 0) {
+    // There is left neighbourg
+    return currentCellId - 1;
+  }
+};
+
+const getRightCell = (currentCellId: number) => {
+  if (currentCellId >= MAP.cellsByLine * 2 - 1) {
+    if ((currentCellId - MAP.cellsByLine - 1) % MAP.cellsByLine === 0) {
+      // There is right neighbourg
+      return currentCellId + 1;
+    }
+  } else if (currentCellId !== MAP.cellsByLine - 1) {
+    // There is right neighbourg
+    return currentCellId + 1;
+  }
+};
+
+const getUpCell = (currentCellId: number) => {
+  if (currentCellId >= MAP.cellsByLine) {
+    // There is up neighbourg
+    return currentCellId - MAP.cellsByLine;
+  }
+};
+
+const getDownCell = (currentCellId: number) => {
+  if (currentCellId < MAP.cellsByLine * MAP.cellsByLine - MAP.cellsByLine) {
+    // There is down neighbourg
+    return currentCellId + MAP.cellsByLine;
+  }
+};
+
+export const getNeighboursCellIds = (cellId: number) => {
   const neighboursCellIds: Array<number> = [];
   // checkLeft
-  if (cellId % MAP.cellsByLine !== 0) {
-    // There is left neighbourg
+  const leftCell = getLeftCell(cellId);
+  if (leftCell) {
+    neighboursCellIds.push(leftCell);
   }
   // checkRight
-  if (cellId % (MAP.cellsByLine - 1) !== 0) {
-    // There is right neighbourg
+  const rightCell = getRightCell(cellId);
+  if (rightCell) {
+    neighboursCellIds.push(rightCell);
   }
 
   // checkUp
+  const upCell = getUpCell(cellId);
+  if (upCell) {
+    neighboursCellIds.push(upCell);
+  }
   // checkDown
-  console.log(15 % MAP.cellsByLine);
-  // +1, -1 si pas au bord G/D, +15 -15 si pas au bord H/b
+  const downCell = getDownCell(cellId);
+  if (downCell) {
+    neighboursCellIds.push(downCell);
+  }
 
   return neighboursCellIds;
 };
+
+/**
+ * TODO: get path with multiple case (See algo a* = aStar)
+ * @param cellId
+ * @param direction
+ */
+export const getPathToDirectionFromCellId = (
+  cellId: number,
+  direction: Direction
+) => {
+  // Check if cells are init:
+  if (cells.length === 0) {
+    return;
+  }
+
+  let target: number | undefined = undefined;
+
+  if (direction === "UP") target = getUpCell(cellId);
+  if (direction === "DOWN") target = getDownCell(cellId);
+  if (direction === "LEFT") target = getLeftCell(cellId);
+  if (direction === "RIGHT") target = getRightCell(cellId);
+
+  return target;
+};
+
+// -- MAKE --
+
+// Create Cells
+export var cells: Array<Cell> = initCells();
+// Assign Elements (TODO: get with getter ? on instanciation ?):
+assignCellsElement();

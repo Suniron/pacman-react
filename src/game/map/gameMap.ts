@@ -1,4 +1,4 @@
-import { cells, getCellsId, assignCellsElement } from "./cells";
+import { cells } from "./cells";
 import { heroe } from "game/entities";
 
 // -- VARIABLES --
@@ -97,10 +97,8 @@ export const draw = (config: {
   cellsByLine: number;
 }) => {
   //drawGrid(config); // to debug
-  getCellsId(config);
   drawCellIds(config.ctx); // to debug
-  assignCellsElement();
-  //drawMap(config.ctx);
+  // drawMap(config.ctx);
   // drawMisc // Like game bonus
 
   drawEntites(config);

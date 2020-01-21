@@ -1,7 +1,7 @@
 import { cells } from "game/map/cells";
 import { HEROE_START_CELL } from "game/settings";
 
-export type Directions = "LEFT" | "RIGHT" | "UP" | "DOWN";
+export type Direction = "LEFT" | "RIGHT" | "UP" | "DOWN";
 
 // Todo: create class who are extension of Entite for Monster and Heroe
 export class Entite {
@@ -23,7 +23,7 @@ export class Entite {
    *
    * @param direction - where entite have to go
    */
-  move(direction: Directions) {
+  move(direction: Direction) {
     console.log(
       `${this.name}:I'm going to the ${direction} from ${this.cellId}!`
       // getNextCellFromCell
