@@ -18,32 +18,81 @@ export class Enemy extends Entite {
     const walkablesDir = [];
 
     // Get neighbourgsCell (or undefined):
-    const dir = {
-      up: getPathToDirectionFromCellId(this.cellId, "UP"),
-      down: getPathToDirectionFromCellId(this.cellId, "DOWN"),
-      left: getPathToDirectionFromCellId(this.cellId, "LEFT"),
-      right: getPathToDirectionFromCellId(this.cellId, "RIGHT")
+    const dir: {
+      up: { path: number | undefined; direction: Direction };
+      down: { path: number | undefined; direction: Direction };
+      left: { path: number | undefined; direction: Direction };
+      right: { path: number | undefined; direction: Direction };
+    } = {
+      up: {
+        path: getPathToDirectionFromCellId(this.cellId, "UP"),
+        direction: "UP"
+      },
+      down: {
+        path: getPathToDirectionFromCellId(this.cellId, "DOWN"),
+        direction: "DOWN"
+      },
+      left: {
+        path: getPathToDirectionFromCellId(this.cellId, "LEFT"),
+        direction: "LEFT"
+      },
+      right: {
+        path: getPathToDirectionFromCellId(this.cellId, "RIGHT"),
+        direction: "RIGHT"
+      }
     };
 
     // Remove opposite direction:
-    if (this.movingDir === "UP") delete dir.down;
-    if (this.movingDir === "DOWN") delete dir.up;
-    if (this.movingDir === "LEFT") delete dir.right;
-    if (this.movingDir === "RIGHT") delete dir.left;
-
-    // Keep only walkable cells:
-    for (const [key, value] of Object.entries(dir)) {
-      if (!value) {
-        continue; // Skip
-      }
-      // TODO: Find the bug here
-      walkablesDir.push(value);
+    switch (this.movingDir) {
+      case "UP":
+        delete dir.down;
+        break;
+      case "DOWN":
+        delete dir.up;
+        break;
+      case "LEFT":
+        delete dir.right;
+        break;
+      case "RIGHT":
+        delete dir.left;
+        break;
+      default:
+        break;
     }
 
-    // Make a random choice:
-    const randomChoice = walkablesDir[getRandomInt(Object.entries(dir).length)];
-    console.log(randomChoice);
-    // setNewDirection
+    // Keep only walkable cells:
+    for (const value of Object.values(dir)) {
+      if (value.path) {
+        walkablesDir.push(value);
+      }
+    }
+
+    // If enemy is in a "dead end", go back:
+    if (walkablesDir.length === 0) {
+      switch (this.movingDir) {
+        case "UP":
+          this.movingDir = "DOWN";
+          break;
+        case "DOWN":
+          this.movingDir = "UP";
+          break;
+        case "LEFT":
+          this.movingDir = "RIGHT";
+          break;
+        case "RIGHT":
+          this.movingDir = "LEFT";
+          break;
+        default:
+          break;
+      }
+    } else {
+      // Make a random choice:
+      const randomChoice = walkablesDir[getRandomInt(walkablesDir.length)];
+
+      // setNewDirection
+      this.movingDir = randomChoice.direction;
+    }
+
     // Move
     this.move(this.movingDir);
   }

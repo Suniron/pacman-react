@@ -18,27 +18,9 @@ const GameMap: React.FC = () => {
 
     // --> KEYBOARD LISTENERS :
     window.addEventListener("keydown", onKeydown);
-    /*
-    const onClick = () => {
-      console.log("cexport const getCellIdFromCoords = (x: number, y: number) => {
-  const width = 600;
-  const nbCells = 15;
-  let id = 0;
-
-  const cols = Math.trunc(x / (width / nbCells));
-  const lines = Math.trunc(y / (width / nbCells));
-
-  id = cols + 15 * lines;
-
-  return id;
-};licked");
-    };
-    canvas.current?.addEventListener("click", onClick);
-    */
     console.log("It's freshly draw :-)");
-    // Init draw:
-    draw(ctx);
-    // Re-draw:
+
+    // draw:
     setInterval(() => draw(ctx), GAME_SPEED);
 
     // Formerly ComponentWillUnmount (cleaning):

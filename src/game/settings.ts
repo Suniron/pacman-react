@@ -9,6 +9,9 @@ export const MAP = {
       walkable: "white",
       wall: "grey"
     }
+  },
+  get cellSize() {
+    return this.width / this.cellsByLine;
   }
 };
 

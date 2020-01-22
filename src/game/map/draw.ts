@@ -1,25 +1,21 @@
 import { cells } from "./cells";
 import { heroe, ennemies } from "game/entities";
 import { MAP } from "game/settings";
+import wall_img from "assets/images/wall.png";
+import pacman_img from "assets/images/pacman.png";
+import ghost_green_img from "assets/images/ghost_green.png";
 
 // -- VARIABLES --
+const wallImg = new Image();
+wallImg.src = wall_img;
 
-/**
- * Design the map.
- * Each number represent an element:
- *  0 -> walkable
- *  1 -> wall
- */
+const pacmanImg = new Image();
+pacmanImg.src = pacman_img;
 
-const colors = {
-  walkable: "white",
-  wall: "grey"
-};
+const ghostGreenImg = new Image();
+ghostGreenImg.src = ghost_green_img;
 
 // -- FUNCTIONS --
-/**
- * Make a grid
- */
 const drawGrid = (ctx: CanvasRenderingContext2D) => {
   const { cellsByLine, width } = MAP;
   // -- DRAW GRID --
@@ -72,17 +68,19 @@ const colisionDetect = () => {
 const drawMap = (ctx: CanvasRenderingContext2D) => {
   cells.forEach(cell => {
     // Skip unkown elements:
-    if (cell.element === -1) {
-      return;
+    switch (cell.element) {
+      case 0:
+        // set color
+        ctx.fillStyle = MAP.colors.cells.walkable;
+        // draw rectangle:
+        ctx.fillRect(cell.x, cell.y, cell.width, cell.height);
+        break;
+      case 1:
+        ctx.drawImage(wallImg, cell.x, cell.y, cell.width, cell.height);
+        break;
+      default:
+        return;
     }
-
-    // Set fill color:
-    cell.element === 0
-      ? (ctx.fillStyle = colors.walkable)
-      : (ctx.fillStyle = colors.wall);
-
-    // draw rectangle:
-    ctx.fillRect(cell.x, cell.y, cell.width, cell.height);
   });
 };
 
@@ -92,13 +90,11 @@ const drawEntites = (ctx: CanvasRenderingContext2D) => {
     if (!enemy.isAlive) {
       return;
     }
-    ctx.fillStyle = enemy.color;
-    ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+    ctx.drawImage(ghostGreenImg, enemy.x, enemy.y, enemy.width, enemy.height);
   });
   if (heroe.isAlive) {
     // Heroe:
-    ctx.fillStyle = heroe.color;
-    ctx.fillRect(heroe.x, heroe.y, heroe.width, heroe.height);
+    ctx.drawImage(pacmanImg, heroe.x, heroe.y, heroe.width, heroe.height);
   }
 };
 
@@ -118,4 +114,5 @@ const draw = (ctx: CanvasRenderingContext2D, debug?: boolean) => {
   }
 };
 
+// TODO: To an object
 export default draw;
