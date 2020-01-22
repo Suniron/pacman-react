@@ -1,10 +1,11 @@
-import { Entite } from ".";
+import Entite from "game/entities/entite";
 
-// TODO: extends from Entite
-/*
 export class Heroe extends Entite {
-  constructor(name: string, life: number) {
-    super(name);
+  constructor(name: string, cellId: number) {
+    super(name, cellId, true);
+  }
+
+  handleColision() {
+    this.loseOneHP();
   }
 }
-*/

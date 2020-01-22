@@ -1,6 +1,6 @@
 import { gameBoard } from "./gameBoard";
 import { MAP } from "game/settings";
-import { Direction } from "game/entities";
+import { Direction } from "game/entities/types";
 
 export class Cell {
   id: number = -1;
@@ -79,15 +79,27 @@ const getLeftCell = (currentCellId: number) => {
 };
 
 const getRightCell = (currentCellId: number) => {
-  if (currentCellId >= MAP.cellsByLine * 2 - 1) {
-    if ((currentCellId - MAP.cellsByLine - 1) % MAP.cellsByLine === 0) {
+  if (currentCellId === MAP.cellsByLine - 1) {
+    return;
+  } else if (currentCellId < MAP.cellsByLine - 1) {
+    return currentCellId + 1;
+  } else if (currentCellId - ((MAP.cellsByLine - 1) % MAP.cellsByLine) === 0) {
+    return;
+  } else {
+    return currentCellId + 1;
+  }
+
+  /*
+    if (currentCellId >= MAP.cellsByLine * 2 - 1) {
+      if ((currentCellId - MAP.cellsByLine - 1) % MAP.cellsByLine === 0) {
+        // There is right neighbourg
+        return currentCellId + 1;
+      }
+    } else if (currentCellId !== MAP.cellsByLine - 1) {
       // There is right neighbourg
       return currentCellId + 1;
     }
-  } else if (currentCellId !== MAP.cellsByLine - 1) {
-    // There is right neighbourg
-    return currentCellId + 1;
-  }
+  */
 };
 
 const getUpCell = (currentCellId: number) => {
@@ -116,7 +128,6 @@ export const getNeighboursCellIds = (cellId: number) => {
   if (rightCell) {
     neighboursCellIds.push(rightCell);
   }
-
   // checkUp
   const upCell = getUpCell(cellId);
   if (upCell) {
@@ -147,12 +158,33 @@ export const getPathToDirectionFromCellId = (
 
   let target: number | undefined = undefined;
 
+  // Get cellId if exist (or undefined if not):
   if (direction === "UP") target = getUpCell(cellId);
   if (direction === "DOWN") target = getDownCell(cellId);
   if (direction === "LEFT") target = getLeftCell(cellId);
   if (direction === "RIGHT") target = getRightCell(cellId);
 
+  // If target does not exist, return:
+  if (!target) return;
+
+  // If target is not walkable, return:
+  if (cells[target].element !== 0) return;
+
+  // Target exist and is walkable:
   return target;
+};
+
+export const getCellIdFromCoords = (x: number, y: number) => {
+  const width = 600;
+  const nbCells = 15;
+  let id = 0;
+
+  const cols = Math.trunc(x / (width / nbCells));
+  const lines = Math.trunc(y / (width / nbCells));
+
+  id = cols + 15 * lines;
+
+  return id;
 };
 
 // -- MAKE --

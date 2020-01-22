@@ -1,7 +1,7 @@
-import { getCellIdFromCoords } from "game/map/gameMap";
 import {
   getNeighboursCellIds,
-  getPathToDirectionFromCellId
+  getPathToDirectionFromCellId,
+  getCellIdFromCoords
 } from "game/map/cells";
 
 describe("getCellIdFromCoords()", () => {
@@ -39,18 +39,30 @@ describe("getNeighboursCellIds()", () => {
 });
 
 describe("getPathToDirectionFromCellId()", () => {
-  test("Output from cell 0 to UP should be null", () => {
-    expect(getPathToDirectionFromCellId(0, "UP")).toBeFalsy();
-  });
+  describe("Check if cell does not exist", () => {
+    test("Output from cell 0 to UP should be falsy", () => {
+      expect(getPathToDirectionFromCellId(0, "UP")).toBeFalsy();
+    });
 
-  test("Output from cell 0 to LEFT should be null", () => {
-    expect(getPathToDirectionFromCellId(0, "LEFT")).toBeFalsy();
+    test("Output from cell 0 to LEFT should be falsy", () => {
+      expect(getPathToDirectionFromCellId(0, "LEFT")).toBeFalsy();
+    });
   });
-  test("Output from cell 1 to DOWN should be 16", () => {
-    expect(getPathToDirectionFromCellId(1, "DOWN")).toBe(16);
-  });
+  describe("Check if cell exist and walkable", () => {
+    test("Output from cell 1 to DOWN should be 16", () => {
+      expect(getPathToDirectionFromCellId(1, "DOWN")).toBe(16);
+    });
 
-  test("Output from cell 17 to RIGHT should be 18", () => {
-    expect(getPathToDirectionFromCellId(17, "RIGHT")).toBe(18);
+    test("Output from cell 17 to RIGHT should be 18", () => {
+      expect(getPathToDirectionFromCellId(17, "RIGHT")).toBe(18);
+    });
+    test("Output from cell 77 to RIGHT should be 78", () => {
+      expect(getPathToDirectionFromCellId(77, "RIGHT")).toBe(78);
+    });
+  });
+  describe("Check if cell exist but not walkable", () => {
+    test("Output from cell 151 to LEFT should be falsy", () => {
+      expect(getPathToDirectionFromCellId(151, "LEFT")).toBeFalsy();
+    });
   });
 });

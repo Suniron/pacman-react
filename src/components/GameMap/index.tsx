@@ -1,13 +1,11 @@
 import React, { useRef, useEffect } from "react";
-import { useOvermind } from "store";
-import { draw, getCellIdFromCoords, reDraw } from "../../game/map/gameMap";
-import { cells } from "game/map/cells";
-import { GAME_SPEED } from "game/settings";
+import draw from "game/map/draw";
+import { cells, getCellIdFromCoords } from "game/map/cells";
+import { GAME_SPEED, MAP } from "game/settings";
 import { heroe } from "game/entities";
 
 const GameMap: React.FC = () => {
   // -- HOOKS --
-  const { state } = useOvermind();
   const canvas = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -22,22 +20,33 @@ const GameMap: React.FC = () => {
     window.addEventListener("keydown", onKeydown);
     /*
     const onClick = () => {
-      console.log("clicked");
+      console.log("cexport const getCellIdFromCoords = (x: number, y: number) => {
+  const width = 600;
+  const nbCells = 15;
+  let id = 0;
+
+  const cols = Math.trunc(x / (width / nbCells));
+  const lines = Math.trunc(y / (width / nbCells));
+
+  id = cols + 15 * lines;
+
+  return id;
+};licked");
     };
     canvas.current?.addEventListener("click", onClick);
     */
-    console.log("C'est fraichement draw :-)");
+    console.log("It's freshly draw :-)");
     // Init draw:
-    draw({ ctx: ctx, width: state.appSize.width, cellsByLine: 15 });
+    draw(ctx);
     // Re-draw:
-    setInterval(() => reDraw(), GAME_SPEED);
+    setInterval(() => draw(ctx), GAME_SPEED);
 
     // Formerly ComponentWillUnmount (cleaning):
     return () => {
       //canvas.current?.removeEventListener("click", onClick);
-      console.log("remove");
+      console.log("cleaning...");
     };
-  }, [state.appSize.width, canvas]);
+  }, [canvas]);
 
   // -- FUNCTIONS --
   /**
@@ -76,8 +85,8 @@ const GameMap: React.FC = () => {
   return (
     <>
       <canvas
-        height={state.appSize.height}
-        width={state.appSize.width}
+        height={MAP.height}
+        width={MAP.width}
         onClick={onGameMapClick}
         ref={canvas}
       ></canvas>

@@ -1,12 +1,13 @@
 import { cells } from "./cells";
-import { heroe } from "game/entities";
+import { heroe, ennemies } from "game/entities";
+import { MAP } from "game/settings";
 
 // -- VARIABLES --
 
 /**
  * Design the map.
  * Each number represent an element:
- *  0 -> path
+ *  0 -> walkable
  *  1 -> wall
  */
 
@@ -16,17 +17,11 @@ const colors = {
 };
 
 // -- FUNCTIONS --
-
 /**
  * Make a grid
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const drawGrid = (config: {
-  ctx: CanvasRenderingContext2D;
-  width: number;
-  cellsByLine: number;
-}) => {
-  const { cellsByLine, width, ctx } = config;
+const drawGrid = (ctx: CanvasRenderingContext2D) => {
+  const { cellsByLine, width } = MAP;
   // -- DRAW GRID --
   // Horizontal lines
   for (
@@ -62,6 +57,18 @@ const drawCellIds = (ctx: CanvasRenderingContext2D) => {
   });
 };
 
+const colisionDetect = () => {
+  // Check if colision beetween Heroe and Ennemies:
+  let isColision = false;
+  ennemies.forEach(enemy => {
+    if (heroe.cellId === enemy.cellId) {
+      isColision = true;
+    }
+  });
+
+  return isColision;
+};
+
 const drawMap = (ctx: CanvasRenderingContext2D) => {
   cells.forEach(cell => {
     // Skip unkown elements:
@@ -79,45 +86,36 @@ const drawMap = (ctx: CanvasRenderingContext2D) => {
   });
 };
 
-const drawEntites = (config: {
-  ctx: CanvasRenderingContext2D;
-  width: number;
-  cellsByLine: number;
-}) => {
-  // Pacman:
-  config.ctx.fillStyle = heroe.color;
-  config.ctx.fillRect(heroe.x, heroe.y, heroe.width, heroe.height);
-  console.log(heroe);
-  // Monsters: TODO
+const drawEntites = (ctx: CanvasRenderingContext2D) => {
+  // Ennemies:
+  ennemies.forEach(enemy => {
+    if (!enemy.isAlive) {
+      return;
+    }
+    ctx.fillStyle = enemy.color;
+    ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+  });
+  if (heroe.isAlive) {
+    // Heroe:
+    ctx.fillStyle = heroe.color;
+    ctx.fillRect(heroe.x, heroe.y, heroe.width, heroe.height);
+  }
 };
 
-export const draw = (config: {
-  ctx: CanvasRenderingContext2D;
-  width: number;
-  cellsByLine: number;
-}) => {
-  //drawGrid(config); // to debug
-  drawCellIds(config.ctx); // to debug
-  // drawMap(config.ctx);
+const draw = (ctx: CanvasRenderingContext2D, debug?: boolean) => {
+  drawMap(ctx);
   // drawMisc // Like game bonus
+  drawEntites(ctx);
 
-  drawEntites(config);
-  // collision detect
+  if (debug) {
+    drawGrid(ctx); // Show grid
+    drawCellIds(ctx); // Show Cells number
+  }
+
+  // Check if colision:
+  if (colisionDetect()) {
+    heroe.handleColision();
+  }
 };
 
-export const reDraw = () => {
-  //console.log("redraw ", heroe);
-  // checkCollision()
-};
-export const getCellIdFromCoords = (x: number, y: number) => {
-  const width = 600;
-  const nbCells = 15;
-  let id = 0;
-
-  const cols = Math.trunc(x / (width / nbCells));
-  const lines = Math.trunc(y / (width / nbCells));
-
-  id = cols + 15 * lines;
-
-  return id;
-};
+export default draw;
