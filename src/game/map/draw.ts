@@ -1,19 +1,14 @@
-import { cells } from "./cells";
-import { heroe, ennemies } from "game/entities";
+import { Cell, cells } from "./cells";
 import { MAP } from "game/settings";
 import wall_img from "assets/images/wall.png";
-import pacman_img from "assets/images/pacman.png";
-import ghost_green_img from "assets/images/ghost_green.png";
+import { Enemy } from "game/entities/enemy";
+import { Heroe } from "game/entities/heroe";
+
+// TODO: convert to a class
 
 // -- VARIABLES --
 const wallImg = new Image();
 wallImg.src = wall_img;
-
-const pacmanImg = new Image();
-pacmanImg.src = pacman_img;
-
-const ghostGreenImg = new Image();
-ghostGreenImg.src = ghost_green_img;
 
 // -- FUNCTIONS --
 const drawGrid = (ctx: CanvasRenderingContext2D) => {
@@ -41,7 +36,7 @@ const drawGrid = (ctx: CanvasRenderingContext2D) => {
   }
 };
 
-const drawCellIds = (ctx: CanvasRenderingContext2D) => {
+const drawCellIds = (ctx: CanvasRenderingContext2D, cells: Array<Cell>) => {
   cells.forEach(cell => {
     ctx.font = "12px serif";
     ctx.textAlign = "center";
@@ -53,10 +48,10 @@ const drawCellIds = (ctx: CanvasRenderingContext2D) => {
   });
 };
 
-const colisionDetect = () => {
+const colisionDetect = (heroe: Heroe, enemies: Array<Enemy>) => {
   // Check if colision beetween Heroe and Ennemies:
   let isColision = false;
-  ennemies.forEach(enemy => {
+  enemies.forEach(enemy => {
     if (heroe.cellId === enemy.cellId) {
       isColision = true;
     }
@@ -65,7 +60,7 @@ const colisionDetect = () => {
   return isColision;
 };
 
-const drawMap = (ctx: CanvasRenderingContext2D) => {
+const drawMap = (ctx: CanvasRenderingContext2D, cells: Array<Cell>) => {
   cells.forEach(cell => {
     // Skip unkown elements:
     switch (cell.element) {
@@ -84,34 +79,68 @@ const drawMap = (ctx: CanvasRenderingContext2D) => {
   });
 };
 
-const drawEntites = (ctx: CanvasRenderingContext2D) => {
+const drawEntites = (
+  ctx: CanvasRenderingContext2D,
+  entities: Array<Heroe | Enemy>
+) => {
   // Ennemies:
-  ennemies.forEach(enemy => {
-    if (!enemy.isAlive) {
-      return;
-    }
-    ctx.drawImage(ghostGreenImg, enemy.x, enemy.y, enemy.width, enemy.height);
+  entities.forEach(entitie => {
+    entitie.draw(ctx);
   });
-  if (heroe.isAlive) {
-    // Heroe:
-    ctx.drawImage(pacmanImg, heroe.x, heroe.y, heroe.width, heroe.height);
+};
+
+const drawInterface = (ctx: CanvasRenderingContext2D, heroe: Heroe) => {
+  // Draw skull:
+  if (heroe.hp === 0) {
+    ctx.font = (cells[0].width - cells[0].width / 4).toString() + "px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(
+      "💀",
+      (cells[0].x + cells[0].width) / 2,
+      (cells[0].y + cells[0].height) / 2
+    );
+
+    return;
+  }
+  // Draw hearth:
+  for (let i = 0; i < heroe.hp; i++) {
+    // Set size to 75% of the cell:
+    ctx.font = (cells[i].width - cells[i].width / 4).toString() + "px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(
+      "💓",
+      (cells[i].x + cells[i].width) / 2,
+      (cells[i].y + cells[i].height) / 2
+    );
   }
 };
 
-const draw = (ctx: CanvasRenderingContext2D, debug?: boolean) => {
-  drawMap(ctx);
+const draw = (
+  ctx: CanvasRenderingContext2D,
+  cells: Array<Cell>,
+  heroe: Heroe,
+  enemies: Array<Enemy>,
+  debug?: boolean
+) => {
+  drawMap(ctx, cells);
   // drawMisc // Like game bonus
-  drawEntites(ctx);
+  drawEntites(ctx, [...enemies, heroe]);
+  drawInterface(ctx, heroe);
 
   if (debug) {
     drawGrid(ctx); // Show grid
-    drawCellIds(ctx); // Show Cells number
+    drawCellIds(ctx, cells); // Show Cells number
   }
 
   // Check if colision:
-  if (colisionDetect()) {
+  if (colisionDetect(heroe, enemies)) {
     heroe.handleColision();
   }
+
+  // Reinit ctx settings:
+  ctx.restore();
 };
 
 // TODO: To an object

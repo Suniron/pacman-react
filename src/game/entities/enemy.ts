@@ -2,12 +2,17 @@ import Entite from "game/entities/entite";
 import { AutoMoveState, Direction } from "./types";
 import { getPathToDirectionFromCellId } from "game/map/cells";
 import { getRandomInt } from "game/utils/random";
+import { ENEMIES } from "game/settings";
+import ghost_green_img from "assets/images/ghost_green.png";
 
 export class Enemy extends Entite {
   autoMoveState: AutoMoveState = "ON";
   movingDir: Direction = "UP"; // Begin with UP to leave the spawn
   constructor(name: string, cellId: number) {
     super(name, cellId, false);
+    this.skins = { default: ghost_green_img };
+
+    // Launch automove on init (Best way ?):
     this.launchAutoMove();
   }
 
@@ -109,6 +114,12 @@ export class Enemy extends Entite {
     this.autoMoveState = "OFF";
   }
 }
+
+export const initEnemies = () => {
+  return ENEMIES.map(enemy => {
+    return new Enemy(enemy.NAME, enemy.STARTING_CELL);
+  });
+};
 
 /**
  * -> AutoMove:

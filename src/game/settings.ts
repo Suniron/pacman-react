@@ -16,10 +16,11 @@ export const MAP = {
 };
 
 export const HEROE = {
+  NAME: "PACMAN",
   STARTING_CELL: 202
 };
 
-export const ENNEMIES = [
+export const ENEMIES = [
   {
     NAME: "Ghost#1",
     STARTING_CELL: 112

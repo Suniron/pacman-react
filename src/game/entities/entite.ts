@@ -1,6 +1,6 @@
 import { getPathToDirectionFromCellId, cells } from "game/map/cells";
 import { Direction } from "./types";
-
+import unknow_entitie from "assets/images/unknow_entitie.png";
 class Entite {
   name = "";
   hp = 0;
@@ -10,6 +10,7 @@ class Entite {
   cellId = 0;
   isHeroe: boolean;
   startingCellId = 0;
+  skins = { default: unknow_entitie }; // TODO: store != skins of entite
   constructor(name: string, cellId: number, isHeroe: boolean) {
     this.name = name;
     this.hp = isHeroe ? 3 : 1;
@@ -20,7 +21,7 @@ class Entite {
 
   /**
    *
-   * @param direction - where entite have to go
+   * @param direction - where entite try to go
    */
   move(direction: Direction) {
     if (!this.isAlive) {
@@ -63,6 +64,17 @@ class Entite {
     this.cellId = target;
   }
 
+  draw(ctx: CanvasRenderingContext2D) {
+    // TODO: Improve this (directions, anim, ...)
+    if (!this.isAlive) {
+      return;
+    }
+    const img = new Image();
+    img.src = this.skins.default;
+    ctx.drawImage(img, this.x, this.y, this.width, this.height);
+  }
+
+  // -- GETTERS --
   get isAlive() {
     return this.hp > 0 ? true : false;
   }

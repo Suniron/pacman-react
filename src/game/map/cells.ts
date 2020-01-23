@@ -2,6 +2,8 @@ import { gameBoard } from "./gameBoard";
 import { MAP } from "game/settings";
 import { Direction } from "game/entities/types";
 
+// TODO: Find better way for initCells() and assignCellsElement()
+
 export class Cell {
   id: number = -1;
   x: number = -1;
@@ -43,6 +45,16 @@ export const initCells = () => {
     }
   }
 
+  return assignCellsElement(tempCells);
+};
+
+const assignCellsElement = (cells: Array<Cell>) => {
+  const tempCells = [];
+  for (let i = 0; i < gameBoard.join().split(",").length; i++) {
+    const c = cells[i];
+    c.element = parseInt(gameBoard.join().split(",")[i]);
+    tempCells.push(c);
+  }
   return tempCells;
 };
 
@@ -62,12 +74,6 @@ export const getCellsId = (config: { width: number; cellsByLine: number }) => {
         )
       );
     }
-  }
-};
-
-const assignCellsElement = () => {
-  for (let i = 0; i < gameBoard.join().split(",").length; i++) {
-    cells[i].element = parseInt(gameBoard.join().split(",")[i]);
   }
 };
 
@@ -192,4 +198,4 @@ export const getCellIdFromCoords = (x: number, y: number) => {
 // Create Cells
 export var cells: Array<Cell> = initCells();
 // Assign Elements (TODO: get with getter ? on instanciation ?):
-assignCellsElement();
+//assignCellsElement();
