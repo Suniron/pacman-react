@@ -1,16 +1,17 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import draw from "game/map/draw";
 import { cells, getCellIdFromCoords } from "game/map/cells";
 import { GAME_SPEED, MAP } from "game/settings";
-import { heroe } from "game/entities";
+//import { heroe } from "game/entities";
+import { Heroe } from "game/entities/heroe";
 
 const GameMap: React.FC = () => {
   // -- HOOKS --
   const canvas = useRef<HTMLCanvasElement | null>(null);
-
   useEffect(() => {
     // Use only variable on table as 2nd arg and hooks
     // Formerly ComponentDidMount:
+    console.log("It's freshly draw :-)"); // To debug
     const ctx = canvas.current?.getContext("2d");
     if (!ctx) {
       return;
@@ -18,17 +19,18 @@ const GameMap: React.FC = () => {
 
     // --> KEYBOARD LISTENERS :
     window.addEventListener("keydown", onKeydown);
-    console.log("It's freshly draw :-)");
 
     // draw:
     setInterval(() => draw(ctx), GAME_SPEED);
 
     // Formerly ComponentWillUnmount (cleaning):
     return () => {
-      //canvas.current?.removeEventListener("click", onClick);
       console.log("cleaning...");
+      window.removeEventListener("keydown", onKeydown);
     };
-  }, [canvas]);
+  });
+
+  const [heroe, setHeroe] = useState(new Heroe("Pacman", 165));
 
   // -- FUNCTIONS --
   /**
