@@ -10,7 +10,12 @@ export class Enemy extends Entite {
   movingDir: Direction = "UP"; // Begin with UP to leave the spawn
   constructor(name: string, cellId: number) {
     super(name, cellId, false);
-    this.skins = { default: ghost_green_img };
+    this.skins = {
+      current: ghost_green_img,
+      onMove: [],
+      nextOnMoveIndex: 0
+    };
+    // TODO: add onMove skins here
 
     // Launch automove on init (Best way ?):
     this.launchAutoMove();

@@ -85,7 +85,9 @@ const drawEntites = (
 ) => {
   // Ennemies:
   entities.forEach(entitie => {
-    entitie.draw(ctx);
+    const img = new Image();
+    img.src = entitie.skins.current;
+    ctx.drawImage(img, entitie.x, entitie.y, entitie.width, entitie.height);
   });
 };
 
@@ -118,12 +120,16 @@ const drawInterface = (ctx: CanvasRenderingContext2D, heroe: Heroe) => {
 };
 
 const draw = (
-  ctx: CanvasRenderingContext2D,
   cells: Array<Cell>,
   heroe: Heroe,
   enemies: Array<Enemy>,
+  ctx: CanvasRenderingContext2D | null | undefined,
   debug?: boolean
 ) => {
+  if (!ctx) {
+    return;
+  }
+
   drawMap(ctx, cells);
   // drawMisc // Like game bonus
   drawEntites(ctx, [...enemies, heroe]);

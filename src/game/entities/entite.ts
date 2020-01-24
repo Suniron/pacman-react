@@ -1,16 +1,17 @@
 import { getPathToDirectionFromCellId, cells } from "game/map/cells";
-import { Direction } from "./types";
+import { Direction, Skins } from "./types";
 import unknow_entitie from "assets/images/unknow_entitie.png";
-class Entite {
+class Entitie {
   name = "";
   hp = 0;
   /**
-   * Cell where entite is located
+   * Cell where entitie is located
    */
   cellId = 0;
   isHeroe: boolean;
   startingCellId = 0;
-  skins = { default: unknow_entitie }; // TODO: store != skins of entite
+  skins: Skins = { current: unknow_entitie, onMove: [], nextOnMoveIndex: 0 }; // TODO: store != skins of entitie
+  animTimer?: NodeJS.Timeout;
   constructor(name: string, cellId: number, isHeroe: boolean) {
     this.name = name;
     this.hp = isHeroe ? 3 : 1;
@@ -21,11 +22,12 @@ class Entite {
 
   /**
    *
-   * @param direction - where entite try to go
+   * @param direction - where entitie try to go
    */
   move(direction: Direction) {
     if (!this.isAlive) {
       console.log(`${this.name}: I can't move because i'm dead...`);
+      return;
     }
 
     const target = getPathToDirectionFromCellId(this.cellId, direction);
@@ -36,6 +38,7 @@ class Entite {
     }
     // If way, move if it's possible:
     //console.log(`${this.name}: I'm going to the ${direction} from this cell.`);
+    this.toggleAnim("ON");
     this.cellId = target;
   }
 
@@ -56,6 +59,8 @@ class Entite {
       return;
     }
     this.hp = 0;
+    this.toggleAnim("OFF");
+    this.teleport(this.startingCellId); // Useless normaly
     console.log(`${this.name}: I'm dead :-'(.`);
   }
 
@@ -64,17 +69,37 @@ class Entite {
     this.cellId = target;
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
-    // TODO: Improve this (directions, anim, ...)
-    if (!this.isAlive) {
+  toggleAnim(toggle: "ON" | "OFF") {
+    // If animTimer is already set:
+    if (this.animTimer) {
+      if (toggle === "ON") {
+        return;
+      }
+      // Remove anim timer if toggle is "OFF":
+      clearInterval(this.animTimer);
+      this.animTimer = undefined;
       return;
     }
-    const img = new Image();
-    img.src = this.skins.default;
-    ctx.drawImage(img, this.x, this.y, this.width, this.height);
+
+    // If no setted animTimed:
+    this.animTimer = setInterval(() => this.changeSkin(), 150);
   }
 
-  // -- GETTERS --
+  changeSkin(this: Entitie) {
+    // if no skins defined:
+    if (this.skins.onMove.length === 0) {
+      return;
+    }
+    // Set the skin at the skin index
+    this.skins.current = this.skins.onMove[this.skins.nextOnMoveIndex];
+    // Set the next skin index:
+    this.skins.nextOnMoveIndex =
+      this.skins.nextOnMoveIndex === this.skins.onMove.length - 1
+        ? 0
+        : this.skins.nextOnMoveIndex + 1;
+  }
+
+  // -- GETTERS --&
   get isAlive() {
     return this.hp > 0 ? true : false;
   }
@@ -96,4 +121,4 @@ class Entite {
   }
 }
 
-export default Entite;
+export default Entitie;
