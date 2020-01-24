@@ -3,17 +3,19 @@ import { AutoMoveState, Direction } from "./types";
 import { getPathToDirectionFromCellId } from "game/map/cells";
 import { getRandomInt } from "game/utils/random";
 import { ENEMIES } from "game/settings";
-import ghost_green_img from "assets/images/ghost_green.png";
+import ghost_green_img from "assets/images/ghost_green/ghost_green.png";
+import ghost_blue_img from "assets/images/ghost_blue/ghost_blue.png";
+
+const enemiesImages = [ghost_green_img, ghost_blue_img];
 
 export class Enemy extends Entite {
   autoMoveState: AutoMoveState = "ON";
-  movingDir: Direction = "UP"; // Begin with UP to leave the spawn
+
   constructor(name: string, cellId: number) {
     super(name, cellId, false);
     this.skins = {
-      current: ghost_green_img,
-      onMove: [],
-      nextOnMoveIndex: 0
+      current: enemiesImages[getRandomInt(2)],
+      nextAnimationIndex: 0
     };
     // TODO: add onMove skins here
 
@@ -53,7 +55,7 @@ export class Enemy extends Entite {
     };
 
     // Remove opposite direction:
-    switch (this.movingDir) {
+    switch (this.movingDirection) {
       case "UP":
         delete dir.down;
         break;
@@ -79,18 +81,18 @@ export class Enemy extends Entite {
 
     // If enemy is in a "dead end", go back:
     if (walkablesDir.length === 0) {
-      switch (this.movingDir) {
+      switch (this.movingDirection) {
         case "UP":
-          this.movingDir = "DOWN";
+          this.movingDirection = "DOWN";
           break;
         case "DOWN":
-          this.movingDir = "UP";
+          this.movingDirection = "UP";
           break;
         case "LEFT":
-          this.movingDir = "RIGHT";
+          this.movingDirection = "RIGHT";
           break;
         case "RIGHT":
-          this.movingDir = "LEFT";
+          this.movingDirection = "LEFT";
           break;
         default:
           break;
@@ -100,11 +102,11 @@ export class Enemy extends Entite {
       const randomChoice = walkablesDir[getRandomInt(walkablesDir.length)];
 
       // setNewDirection
-      this.movingDir = randomChoice.direction;
+      this.movingDirection = randomChoice.direction;
     }
 
     // Move
-    this.move(this.movingDir);
+    this.move(this.movingDirection);
   }
   launchAutoMove() {
     if (this.autoMoveState === "OFF") {

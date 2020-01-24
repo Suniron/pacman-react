@@ -3,9 +3,5 @@ import GameMap from "components/GameMap";
 
 export const Pacman = () => {
   // -- RENDER --
-  return (
-    <div>
-      <GameMap />
-    </div>
-  );
+  return <GameMap />;
 };

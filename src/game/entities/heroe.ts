@@ -1,16 +1,28 @@
 import Entite from "game/entities/entite";
-//import pacman_img from "assets/images/pacman.png";
-import pacman_closed_img from "assets/images/pacman/pacman_closed_mouth.png";
-import pacman_half_img from "assets/images/pacman/pacman_half_opened_mouth.png";
-import pacman_full_img from "assets/images/pacman/pacman_full_opened_mouth.png";
+
+import pacman_default_img from "assets/images/pacman/pacman_default.png";
+import pacman_left1 from "assets/images/pacman/pacman_left1.png";
+import pacman_left2 from "assets/images/pacman/pacman_left2.png";
+import pacman_right1 from "assets/images/pacman/pacman_right1.png";
+import pacman_right2 from "assets/images/pacman/pacman_right2.png";
+import pacman_up1 from "assets/images/pacman/pacman_up1.png";
+import pacman_up2 from "assets/images/pacman/pacman_up2.png";
+import pacman_down1 from "assets/images/pacman/pacman_down1.png";
+import pacman_down2 from "assets/images/pacman/pacman_down2.png";
 
 export class Heroe extends Entite {
   constructor(name: string, cellId: number) {
     super(name, cellId, true);
     this.skins = {
-      current: pacman_closed_img,
-      onMove: [pacman_half_img, pacman_full_img],
-      nextOnMoveIndex: 0
+      default: pacman_default_img,
+      current: pacman_default_img,
+      animations: {
+        left: [pacman_left1, pacman_left2],
+        right: [pacman_right1, pacman_right2],
+        up: [pacman_up1, pacman_up2],
+        down: [pacman_down1, pacman_down2]
+      },
+      nextAnimationIndex: 0
     };
   }
 

@@ -10,7 +10,8 @@ class Entitie {
   cellId = 0;
   isHeroe: boolean;
   startingCellId = 0;
-  skins: Skins = { current: unknow_entitie, onMove: [], nextOnMoveIndex: 0 }; // TODO: store != skins of entitie
+  movingDirection: Direction = "UP";
+  skins: Skins = { current: unknow_entitie, nextAnimationIndex: 0 };
   animTimer?: NodeJS.Timeout;
   constructor(name: string, cellId: number, isHeroe: boolean) {
     this.name = name;
@@ -33,12 +34,24 @@ class Entitie {
     const target = getPathToDirectionFromCellId(this.cellId, direction);
     // If no way:
     if (!target) {
-      //console.log(`${this.name}: I can't move at ${direction} from this cell.`);
       return;
     }
     // If way, move if it's possible:
-    //console.log(`${this.name}: I'm going to the ${direction} from this cell.`);
-    this.toggleAnim("ON");
+    // Launch animations if timer isn't setted:
+    if (!this.animTimer) {
+      this.toggleAnim("ON");
+    }
+
+    // If the direction to move change than current:
+    if (this.movingDirection !== direction) {
+      // Set new direction
+      this.movingDirection = direction;
+      // Reload the animations:
+      this.toggleAnim("OFF");
+      this.toggleAnim("ON");
+    }
+
+    // Change cellId => move
     this.cellId = target;
   }
 
@@ -59,9 +72,9 @@ class Entitie {
       return;
     }
     this.hp = 0;
-    this.toggleAnim("OFF");
-    this.teleport(this.startingCellId); // Useless normaly
-    console.log(`${this.name}: I'm dead :-'(.`);
+    this.toggleAnim("OFF"); // Stop anim
+    this.teleport(this.startingCellId);
+    console.log(`${this.name}: I'm dead :-'(.`); // Debug
   }
 
   teleport(target: number) {
@@ -70,33 +83,59 @@ class Entitie {
   }
 
   toggleAnim(toggle: "ON" | "OFF") {
-    // If animTimer is already set:
-    if (this.animTimer) {
-      if (toggle === "ON") {
+    if (!this.skins.animations)
+      if (this.animTimer) {
+        // If animTimer is already set:
+        if (toggle === "ON") {
+          return;
+        }
+        // Remove anim timer if toggle is "OFF":
+        clearInterval(this.animTimer);
+        this.animTimer = undefined;
         return;
       }
-      // Remove anim timer if toggle is "OFF":
-      clearInterval(this.animTimer);
-      this.animTimer = undefined;
-      return;
-    }
 
     // If no setted animTimed:
     this.animTimer = setInterval(() => this.changeSkin(), 150);
   }
 
   changeSkin(this: Entitie) {
-    // if no skins defined:
-    if (this.skins.onMove.length === 0) {
+    // If entitie doesnt includes animations
+    if (!this.skins.animations) {
       return;
     }
+    // if no skins defined (based on the left dir):
+    if (this.skins.animations.left.length === 0) {
+      return;
+    }
+    let dir = undefined;
+
+    switch (this.movingDirection) {
+      case "UP":
+        dir = this.skins.animations.up;
+        break;
+      case "DOWN":
+        dir = this.skins.animations.down;
+        break;
+      case "LEFT":
+        dir = this.skins.animations.left;
+        break;
+      case "RIGHT":
+        dir = this.skins.animations.right;
+        break;
+      default:
+        // Set right by default:
+        dir = this.skins.animations.right;
+        break;
+    }
+
     // Set the skin at the skin index
-    this.skins.current = this.skins.onMove[this.skins.nextOnMoveIndex];
+    this.skins.current = dir[this.skins.nextAnimationIndex];
     // Set the next skin index:
-    this.skins.nextOnMoveIndex =
-      this.skins.nextOnMoveIndex === this.skins.onMove.length - 1
+    this.skins.nextAnimationIndex =
+      this.skins.nextAnimationIndex === dir.length - 1
         ? 0
-        : this.skins.nextOnMoveIndex + 1;
+        : this.skins.nextAnimationIndex + 1;
   }
 
   // -- GETTERS --&

@@ -1,8 +1,14 @@
 export const GAME_SPEED = 10;
 
 export const MAP = {
-  height: 600,
-  width: 600,
+  height:
+    window.innerWidth < window.innerHeight
+      ? window.innerWidth
+      : window.innerHeight,
+  width:
+    window.innerWidth < window.innerHeight
+      ? window.innerWidth
+      : window.innerHeight,
   cellsByLine: 15,
   colors: {
     cells: {

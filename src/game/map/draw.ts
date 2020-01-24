@@ -85,6 +85,10 @@ const drawEntites = (
 ) => {
   // Ennemies:
   entities.forEach(entitie => {
+    if (!entitie.isAlive) {
+      return;
+    }
+
     const img = new Image();
     img.src = entitie.skins.current;
     ctx.drawImage(img, entitie.x, entitie.y, entitie.width, entitie.height);
