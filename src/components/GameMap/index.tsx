@@ -115,7 +115,6 @@ const GameMap: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [game] = useState(new Game());
 
-  console.log(game);
   useInterval(
     () => draw(canvasRef.current?.getContext("2d"), game),
     GAME_SPEED

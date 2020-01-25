@@ -10,7 +10,6 @@ class Game {
   heroe = new Heroe("Pacman", this.cells, 202); // TODO: groupe in entities with enemiesIndex  levels = new Levels(this.cells);
   levels: Array<Level> = initLevels();
   constructor() {
-    console.log("init");
     this.cells = initCells(this.currentLevel.board);
     this.reset();
     this.start();
@@ -44,7 +43,6 @@ class Game {
     return this.levels[0];
   }
   get enemies() {
-    console.log(this.currentLevel);
     return this.currentLevel.enemies;
   }
   /**
