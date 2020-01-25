@@ -1,6 +1,7 @@
-import { gameBoard } from "./gameBoard";
 import { MAP } from "game/settings";
 import { Direction } from "game/entities/types";
+import { Board } from "./types";
+import { board1 } from "game/levels";
 
 // TODO: Find better way for initCells() and assignCellsElement()
 
@@ -11,7 +12,7 @@ export class Cell {
   width: number = -1;
   height: number = -1;
 
-  /**
+  /**map
    * -1 -> undefined
    * 0 -> walkable
    * 1 -> wall
@@ -28,7 +29,7 @@ export class Cell {
 }
 
 // -- FUNCTIONS --
-export const initCells = () => {
+export const initCells = (levelBoard: Board) => {
   const tempCells: Array<Cell> = [];
 
   for (let column = 0; column < MAP.cellsByLine; column++) {
@@ -45,28 +46,30 @@ export const initCells = () => {
     }
   }
 
-  return assignCellsElement(tempCells);
+  return assignCellsElement(tempCells, levelBoard);
 };
 
-const assignCellsElement = (cells: Array<Cell>) => {
+const assignCellsElement = (cells: Array<Cell>, levelBoard: Board) => {
   const tempCells = [];
-  for (let i = 0; i < gameBoard.join().split(",").length; i++) {
+  for (let i = 0; i < levelBoard.join().split(",").length; i++) {
     const c = cells[i];
-    c.element = parseInt(gameBoard.join().split(",")[i]);
+    c.element = parseInt(levelBoard.join().split(",")[i]);
     tempCells.push(c);
   }
   return tempCells;
 };
 
+// TODO: FIND A CORRECTION:
 export const getCellsId = (config: { width: number; cellsByLine: number }) => {
   // Destructuring parameters:
   const { width, cellsByLine } = config;
+  const cellsId = [];
 
   for (let column = 0; column < cellsByLine; column++) {
     for (let row = 0; row < cellsByLine; row++) {
-      cells.push(
+      cellsId.push(
         new Cell(
-          cells.length,
+          cellsId.length,
           row * (width / cellsByLine),
           column * (width / cellsByLine),
           width / cellsByLine,
@@ -154,6 +157,7 @@ export const getNeighboursCellIds = (cellId: number) => {
  * @param direction
  */
 export const getPathToDirectionFromCellId = (
+  cells: Array<Cell>,
   cellId: number,
   direction: Direction
 ) => {
@@ -196,6 +200,6 @@ export const getCellIdFromCoords = (x: number, y: number) => {
 // -- MAKE --
 
 // Create Cells
-export var cells: Array<Cell> = initCells();
+export var cells: Array<Cell> = initCells(board1);
 // Assign Elements (TODO: get with getter ? on instanciation ?):
 //assignCellsElement();

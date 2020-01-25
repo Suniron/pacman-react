@@ -1,8 +1,7 @@
 import Entite from "game/entities/entite";
 import { AutoMoveState, Direction } from "./types";
-import { getPathToDirectionFromCellId } from "game/map/cells";
+import { getPathToDirectionFromCellId, Cell, cells } from "game/map/cells";
 import { getRandomInt } from "game/utils/random";
-import { ENEMIES } from "game/settings";
 import ghost_green_img from "assets/images/ghost_green/ghost_green.png";
 import ghost_blue_img from "assets/images/ghost_blue/ghost_blue.png";
 
@@ -12,7 +11,7 @@ export class Enemy extends Entite {
   autoMoveState: AutoMoveState = "ON";
 
   constructor(name: string, cellId: number) {
-    super(name, cellId, false);
+    super(name, cells, cellId, false);
     this.skins = {
       current: enemiesImages[getRandomInt(2)],
       nextAnimationIndex: 0
@@ -37,19 +36,19 @@ export class Enemy extends Entite {
       right: { path: number | undefined; direction: Direction };
     } = {
       up: {
-        path: getPathToDirectionFromCellId(this.cellId, "UP"),
+        path: getPathToDirectionFromCellId(cells, this.cellId, "UP"),
         direction: "UP"
       },
       down: {
-        path: getPathToDirectionFromCellId(this.cellId, "DOWN"),
+        path: getPathToDirectionFromCellId(cells, this.cellId, "DOWN"),
         direction: "DOWN"
       },
       left: {
-        path: getPathToDirectionFromCellId(this.cellId, "LEFT"),
+        path: getPathToDirectionFromCellId(cells, this.cellId, "LEFT"),
         direction: "LEFT"
       },
       right: {
-        path: getPathToDirectionFromCellId(this.cellId, "RIGHT"),
+        path: getPathToDirectionFromCellId(cells, this.cellId, "RIGHT"),
         direction: "RIGHT"
       }
     };
@@ -121,12 +120,6 @@ export class Enemy extends Entite {
     this.autoMoveState = "OFF";
   }
 }
-
-export const initEnemies = () => {
-  return ENEMIES.map(enemy => {
-    return new Enemy(enemy.NAME, enemy.STARTING_CELL);
-  });
-};
 
 /**
  * -> AutoMove:

@@ -1,5 +1,5 @@
 import Entite from "game/entities/entite";
-
+import { Cell } from "game/map/cells";
 import pacman_default_img from "assets/images/pacman/pacman_default.png";
 import pacman_left1 from "assets/images/pacman/pacman_left1.png";
 import pacman_left2 from "assets/images/pacman/pacman_left2.png";
@@ -11,8 +11,8 @@ import pacman_down1 from "assets/images/pacman/pacman_down1.png";
 import pacman_down2 from "assets/images/pacman/pacman_down2.png";
 
 export class Heroe extends Entite {
-  constructor(name: string, cellId: number) {
-    super(name, cellId, true);
+  constructor(name: string, cells: Array<Cell>, cellId: number) {
+    super(name, cells, cellId, true);
     this.skins = {
       default: pacman_default_img,
       current: pacman_default_img,

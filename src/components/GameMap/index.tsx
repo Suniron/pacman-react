@@ -1,10 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import draw from "game/map/draw";
-import { getCellIdFromCoords, initCells } from "game/map/cells";
-import { GAME_SPEED, MAP, HEROE } from "game/settings";
-//import { heroe } from "game/entities";
-import { Heroe } from "game/entities/heroe";
-import { initEnemies } from "game/entities/enemy";
+import { getCellIdFromCoords } from "game/map/cells";
+import { GAME_SPEED, MAP } from "game/settings";
 import { Direction } from "game/entities/types";
 import { Container, Col, Row, Image } from "react-bootstrap";
 import arrow_up_img from "assets/images/interface/arrow_up.png";
@@ -12,6 +9,8 @@ import arrow_down_img from "assets/images/interface/arrow_down.png";
 import arrow_left_img from "assets/images/interface/arrow_left.png";
 import arrow_right_img from "assets/images/interface/arrow_right.png";
 import { ButtonsProps } from "./types";
+import Game from "game/game";
+import { isMobile } from "react-device-detect";
 
 // TODO: Use css instead of style tag
 const buttonSize = 80; // TODO: Calcul to get this
@@ -114,15 +113,14 @@ const useInterval = (callback: () => any, ms: number) => {
 const GameMap: React.FC = () => {
   // -- HOOKS --
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [cells] = useState(initCells());
-  const [heroe] = useState(new Heroe(HEROE.NAME, HEROE.STARTING_CELL));
-  const [enemies] = useState(initEnemies());
+  const [game] = useState(new Game());
 
+  console.log(game);
   useInterval(
-    () => draw(cells, heroe, enemies, canvasRef.current?.getContext("2d")),
+    () => draw(canvasRef.current?.getContext("2d"), game),
     GAME_SPEED
   );
-  useKeyboardArrows(dir => heroe.move(dir));
+  useKeyboardArrows(dir => game.heroe.move(dir));
 
   // -- FUNCTIONS --
   const handleCanvasClick = (
@@ -134,12 +132,12 @@ const GameMap: React.FC = () => {
     const x = e.clientX - canvasRef.current.offsetLeft;
     const y = e.clientY - canvasRef.current.offsetTop;
 
-    const clickedCell = cells[getCellIdFromCoords(x, y)];
+    const clickedCell = game.cells[getCellIdFromCoords(x, y)];
     console.log(clickedCell); // To debug
   };
 
   const handleButtonsClick = (dir: Direction) => {
-    heroe.move(dir);
+    game.heroe.move(dir);
   };
 
   // -- RENDER --
@@ -153,9 +151,11 @@ const GameMap: React.FC = () => {
           ref={canvasRef}
         ></canvas>
       </Row>
-      <Row className="justify-content-center">
-        <Buttons onClickHandler={handleButtonsClick} />
-      </Row>
+      {isMobile ? (
+        <Row className="justify-content-center">
+          <Buttons onClickHandler={handleButtonsClick} />
+        </Row>
+      ) : null}
     </Container>
   );
 };

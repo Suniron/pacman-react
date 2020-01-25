@@ -1,4 +1,4 @@
-import { getPathToDirectionFromCellId, cells } from "game/map/cells";
+import { getPathToDirectionFromCellId, Cell, cells } from "game/map/cells";
 import { Direction, Skins } from "./types";
 import unknow_entitie from "assets/images/unknow_entitie.png";
 class Entitie {
@@ -13,7 +13,13 @@ class Entitie {
   movingDirection: Direction = "UP";
   skins: Skins = { current: unknow_entitie, nextAnimationIndex: 0 };
   animTimer?: NodeJS.Timeout;
-  constructor(name: string, cellId: number, isHeroe: boolean) {
+
+  constructor(
+    name: string,
+    cells: Array<Cell>,
+    cellId: number,
+    isHeroe: boolean
+  ) {
     this.name = name;
     this.hp = isHeroe ? 3 : 1;
     this.isHeroe = isHeroe;
@@ -24,6 +30,7 @@ class Entitie {
   /**
    *
    * @param direction - where entitie try to go
+   * Todo: Find a way without cells
    */
   move(direction: Direction) {
     if (!this.isAlive) {
@@ -31,7 +38,7 @@ class Entitie {
       return;
     }
 
-    const target = getPathToDirectionFromCellId(this.cellId, direction);
+    const target = getPathToDirectionFromCellId(cells, this.cellId, direction);
     // If no way:
     if (!target) {
       return;

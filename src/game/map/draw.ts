@@ -1,8 +1,9 @@
-import { Cell, cells } from "./cells";
+import { Cell } from "./cells";
 import { MAP } from "game/settings";
 import wall_img from "assets/images/wall.png";
 import { Enemy } from "game/entities/enemy";
 import { Heroe } from "game/entities/heroe";
+import Game from "game/game";
 
 // TODO: convert to a class
 
@@ -95,58 +96,59 @@ const drawEntites = (
   });
 };
 
-const drawInterface = (ctx: CanvasRenderingContext2D, heroe: Heroe) => {
+const drawInterface = (ctx: CanvasRenderingContext2D, game: Game) => {
   // Draw skull:
-  if (heroe.hp === 0) {
-    ctx.font = (cells[0].width - cells[0].width / 4).toString() + "px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+  if (game.heroe.hp === 0) {
+    ctx.font =
+      (game.cells[0].width - game.cells[0].width / 4).toString() + "px Arial";
+    //ctx.textAlign = "center";
+    //ctx.textBaseline = "middle";
     ctx.fillText(
       "💀",
-      (cells[0].x + cells[0].width) / 2,
-      (cells[0].y + cells[0].height) / 2
+      game.cells[0].x + game.cells[0].width / 2,
+      game.cells[0].y + game.cells[0].height / 2
     );
 
     return;
   }
   // Draw hearth:
-  for (let i = 0; i < heroe.hp; i++) {
+  for (let i = 0; i < game.heroe.hp; i++) {
     // Set size to 75% of the cell:
-    ctx.font = (cells[i].width - cells[i].width / 4).toString() + "px Arial";
+    ctx.font =
+      (game.cells[i].width - game.cells[i].width / 4).toString() + "px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(
-      "💓",
-      (cells[i].x + cells[i].width) / 2,
-      (cells[i].y + cells[i].height) / 2
+      "❤️",
+      game.cells[i].x + (game.cells[0].x + game.cells[0].width) / 2,
+      game.cells[i].y + (game.cells[0].x + game.cells[0].height) / 2
     );
   }
 };
 
 const draw = (
-  cells: Array<Cell>,
-  heroe: Heroe,
-  enemies: Array<Enemy>,
   ctx: CanvasRenderingContext2D | null | undefined,
+  game: Game,
   debug?: boolean
 ) => {
   if (!ctx) {
     return;
   }
 
-  drawMap(ctx, cells);
+  drawMap(ctx, game.cells);
   // drawMisc // Like game bonus
-  drawEntites(ctx, [...enemies, heroe]);
-  drawInterface(ctx, heroe);
+  drawEntites(ctx, [...game.enemies, game.heroe]);
+  drawInterface(ctx, game);
 
+  // /!\: Debug use high memory
   if (debug) {
     drawGrid(ctx); // Show grid
-    drawCellIds(ctx, cells); // Show Cells number
+    drawCellIds(ctx, game.cells); // Show Cells number
   }
 
   // Check if colision:
-  if (colisionDetect(heroe, enemies)) {
-    heroe.handleColision();
+  if (colisionDetect(game.heroe, game.enemies)) {
+    game.heroe.handleColision();
   }
 
   // Reinit ctx settings:

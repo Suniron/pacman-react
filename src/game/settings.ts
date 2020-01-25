@@ -20,15 +20,3 @@ export const MAP = {
     return this.width / this.cellsByLine;
   }
 };
-
-export const HEROE = {
-  NAME: "PACMAN",
-  STARTING_CELL: 202
-};
-
-export const ENEMIES = [
-  {
-    NAME: "Ghost#1",
-    STARTING_CELL: 112
-  }
-];
