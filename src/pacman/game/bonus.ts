@@ -1,4 +1,4 @@
-import { Cell } from "pacman/map/cells";
+import { Cell, getAllfreeCells } from "pacman/map/cells";
 import { BonusType } from "./types";
 import { shuffle } from "pacman/utils/random";
 
@@ -34,12 +34,13 @@ export class BigBonus extends Bonus {
  * @param nbSimpleBonuses Number of simple bonuses
  * @param nbBigBonuses Number of big bonuses
  */
-export const initBonus = (
+export const initBonuses = (
   cells: Array<Cell>,
   nbSimpleBonuses: number,
   nbBigBonuses: number
 ) => {
   const bonuses = [];
+
   // Check if simple+big > cells.length
   if (cells.length < nbBigBonuses + nbSimpleBonuses) {
     return [];
@@ -47,7 +48,7 @@ export const initBonus = (
   }
 
   // get shufflized array:
-  const shufflizedArray = shuffle(cells);
+  const shufflizedArray = shuffle(getAllfreeCells(cells));
 
   // Assign simple::
   for (let i = 0; i < nbSimpleBonuses; i++) {

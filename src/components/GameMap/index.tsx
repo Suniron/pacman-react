@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import draw from "pacman/map/draw";
 import { getCellIdFromCoords } from "pacman/map/cells";
 import { GAME_SPEED, MAP } from "pacman/settings";
@@ -11,6 +11,7 @@ import arrow_right_img from "assets/images/interface/arrow_right.png";
 import { ButtonsProps } from "./types";
 import Game from "pacman/game/game";
 import { isMobile } from "react-device-detect";
+import { useOvermind } from "store";
 
 // TODO: Use css instead of style tag
 const buttonSize = 80; // TODO: Calcul to get this
@@ -113,13 +114,15 @@ const useInterval = (callback: () => any, ms: number) => {
 const GameMap: React.FC = () => {
   // -- HOOKS --
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [game] = useState(new Game());
+  //const [game] = useState(new Game());
+  const { state } = useOvermind();
 
   useInterval(
-    () => draw(canvasRef.current?.getContext("2d"), game),
+    () => draw(canvasRef.current?.getContext("2d"), state.game),
     GAME_SPEED
   );
-  useKeyboardArrows(dir => game.heroe.move(dir));
+
+  useKeyboardArrows(dir => state.game.heroe.move(dir));
 
   // -- FUNCTIONS --
   const handleCanvasClick = (
@@ -131,12 +134,12 @@ const GameMap: React.FC = () => {
     const x = e.clientX - canvasRef.current.offsetLeft;
     const y = e.clientY - canvasRef.current.offsetTop;
 
-    const clickedCell = game.cells[getCellIdFromCoords(x, y)];
+    const clickedCell = state.game.cells[getCellIdFromCoords(x, y)];
     console.log(clickedCell); // To debug
   };
 
   const handleButtonsClick = (dir: Direction) => {
-    game.heroe.move(dir);
+    state.game.heroe.move(dir);
   };
 
   // -- RENDER --

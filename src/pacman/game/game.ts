@@ -7,6 +7,7 @@ class Game {
   currentLevelNb = 1;
   isPause = false;
   cells: Array<Cell>;
+  //bonuses: Array<Bonus>;
 
   heroe = new Heroe("Pacman", 202); // TODO: groupe in entities with enemiesIndex  levels = new Levels(this.cells);
   levels: Array<Level> = initLevels();
@@ -19,9 +20,11 @@ class Game {
    * Set Game instance to initial state
    */
   reset = () => {
+    this.cells = initCells(this.currentLevel.board);
     this.score = 0;
     this.currentLevelNb = 1;
     this.isPause = false;
+    //this.bonuses = initBonuses(this.cells);
   };
 
   /**
@@ -39,7 +42,6 @@ class Game {
   };
 
   // -- GETTERS --
-
   get currentLevel() {
     return this.levels[0];
   }

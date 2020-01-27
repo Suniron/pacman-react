@@ -26,6 +26,7 @@ export class Enemy extends Entite {
     if (this.autoMoveState === "OFF") {
       return;
     }
+
     const walkablesDir = [];
 
     // Get neighbourgsCell (or undefined):

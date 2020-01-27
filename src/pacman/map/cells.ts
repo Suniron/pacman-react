@@ -1,7 +1,7 @@
 import { MAP } from "pacman/settings";
 import { Direction } from "pacman/entities/types";
 import { Board } from "./types";
-import { board1 } from "pacman/game/levels";
+import { board1 } from "pacman/game/boards";
 
 // TODO: Find better way for initCells() and assignCellsElement()
 
@@ -73,7 +73,7 @@ export const getAllfreeCells = (cells: Array<Cell>) => {
   const freeCells: Array<Cell> = [];
 
   cells.forEach(cell => {
-    if (cell.isFree()) {
+    if (cell.isFree) {
       return cell;
     }
   });
