@@ -2,8 +2,9 @@ import {
   getNeighboursCellIds,
   getPathToDirectionFromCellId,
   getCellIdFromCoords
-} from "game/map/cells";
-import Game from "game/game";
+} from "pacman/map/cells";
+import Game from "pacman/game/game";
+import { Bonus, initBonus } from "pacman/game/bonus";
 
 describe("getCellIdFromCoords()", () => {
   test("x = 10 and y = 10 should be cellID = 0", () => {
@@ -66,5 +67,33 @@ describe("getPathToDirectionFromCellId()", () => {
     test("Output from cell 151 to LEFT should be falsy", () => {
       expect(getPathToDirectionFromCellId(game.cells, 151, "LEFT")).toBeFalsy();
     });
+  });
+});
+
+describe("Bonus", () => {
+  const game = new Game();
+  describe("Class Bonus", () => {
+    const bonus = new Bonus(game.cells[19], "SIMPLE");
+  });
+  describe("initBonus()", () => {
+    test("Output length of 2 small + 1 big = 3", () => {
+      expect(initBonus(game.cells, 2, 1).length).toBe(3);
+    });
+    test("Output length of 2 small + 2 big = 4", () => {
+      expect(initBonus(game.cells, 2, 2).length).toBe(4);
+    });
+    test("Output length of 2 small + 2 big = 4", () => {
+      expect(initBonus(game.cells, 2, 2).length).toBe(4);
+    });
+    test("Output length of 1 small + 0 big = 1", () => {
+      expect(initBonus(game.cells, 1, 0).length).toBe(1);
+    });
+    test("Output length of 0 small + 1 big = 1", () => {
+      expect(initBonus(game.cells, 0, 1).length).toBe(1);
+    });
+    test("Should throw an errow if not enough empty cells", () => {
+      expect(initBonus([game.cells[25]], 1, 1).length).toBe(0);
+    });
+    // Test with more bonus than empty cells
   });
 });

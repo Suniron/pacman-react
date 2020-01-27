@@ -1,6 +1,5 @@
-import { Enemy } from "game/entities/enemy";
-import { Cell } from "./map/cells";
-import { Board } from "./map/types";
+import { Enemy } from "pacman/entities/enemy";
+import { Board } from "../map/types";
 
 export const board1 = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],

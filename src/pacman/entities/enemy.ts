@@ -1,7 +1,7 @@
-import Entite from "game/entities/entite";
+import Entite from "pacman/entities/entite";
 import { AutoMoveState, Direction } from "./types";
-import { getPathToDirectionFromCellId, Cell, cells } from "game/map/cells";
-import { getRandomInt } from "game/utils/random";
+import { getPathToDirectionFromCellId, cells } from "pacman/map/cells";
+import { getRandomInt } from "pacman/utils/random";
 import ghost_green_img from "assets/images/ghost_green/ghost_green.png";
 import ghost_blue_img from "assets/images/ghost_blue/ghost_blue.png";
 
@@ -11,7 +11,7 @@ export class Enemy extends Entite {
   autoMoveState: AutoMoveState = "ON";
 
   constructor(name: string, cellId: number) {
-    super(name, cells, cellId, false);
+    super(name, cellId, false);
     this.skins = {
       current: enemiesImages[getRandomInt(2)],
       nextAnimationIndex: 0

@@ -1,4 +1,4 @@
-import { getPathToDirectionFromCellId, Cell, cells } from "game/map/cells";
+import { getPathToDirectionFromCellId, cells } from "pacman/map/cells";
 import { Direction, Skins } from "./types";
 import unknow_entitie from "assets/images/unknow_entitie.png";
 class Entitie {
@@ -14,12 +14,7 @@ class Entitie {
   skins: Skins = { current: unknow_entitie, nextAnimationIndex: 0 };
   animTimer?: NodeJS.Timeout;
 
-  constructor(
-    name: string,
-    cells: Array<Cell>,
-    cellId: number,
-    isHeroe: boolean
-  ) {
+  constructor(name: string, cellId: number, isHeroe: boolean) {
     this.name = name;
     this.hp = isHeroe ? 3 : 1;
     this.isHeroe = isHeroe;

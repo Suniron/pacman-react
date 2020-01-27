@@ -1,15 +1,15 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
-import draw from "game/map/draw";
-import { getCellIdFromCoords } from "game/map/cells";
-import { GAME_SPEED, MAP } from "game/settings";
-import { Direction } from "game/entities/types";
+import draw from "pacman/map/draw";
+import { getCellIdFromCoords } from "pacman/map/cells";
+import { GAME_SPEED, MAP } from "pacman/settings";
+import { Direction } from "pacman/entities/types";
 import { Container, Col, Row, Image } from "react-bootstrap";
 import arrow_up_img from "assets/images/interface/arrow_up.png";
 import arrow_down_img from "assets/images/interface/arrow_down.png";
 import arrow_left_img from "assets/images/interface/arrow_left.png";
 import arrow_right_img from "assets/images/interface/arrow_right.png";
 import { ButtonsProps } from "./types";
-import Game from "game/game";
+import Game from "pacman/game/game";
 import { isMobile } from "react-device-detect";
 
 // TODO: Use css instead of style tag

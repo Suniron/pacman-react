@@ -1,4 +1,4 @@
-import { HEROE, ENNEMIES } from "game/settings";
+import { HEROE, ENNEMIES } from "pacman/settings";
 import { Heroe } from "./heroe";
 import { Enemy } from "./enemy";
 

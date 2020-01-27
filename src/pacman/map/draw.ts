@@ -1,9 +1,9 @@
 import { Cell } from "./cells";
-import { MAP } from "game/settings";
+import { MAP } from "pacman/settings";
 import wall_img from "assets/images/wall.png";
-import { Enemy } from "game/entities/enemy";
-import { Heroe } from "game/entities/heroe";
-import Game from "game/game";
+import { Enemy } from "pacman/entities/enemy";
+import { Heroe } from "pacman/entities/heroe";
+import Game from "pacman/game/game";
 
 // TODO: convert to a class
 

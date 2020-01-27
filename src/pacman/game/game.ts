@@ -1,13 +1,14 @@
 import { initLevels, Level } from "./levels";
-import { Heroe } from "./entities/heroe";
-import { initCells, Cell } from "./map/cells";
+import { Heroe } from "../entities/heroe";
+import { initCells, Cell } from "../map/cells";
 
 class Game {
   score = 0;
   currentLevelNb = 1;
   isPause = false;
   cells: Array<Cell>;
-  heroe = new Heroe("Pacman", this.cells, 202); // TODO: groupe in entities with enemiesIndex  levels = new Levels(this.cells);
+
+  heroe = new Heroe("Pacman", 202); // TODO: groupe in entities with enemiesIndex  levels = new Levels(this.cells);
   levels: Array<Level> = initLevels();
   constructor() {
     this.cells = initCells(this.currentLevel.board);

@@ -1,7 +1,7 @@
-import { MAP } from "game/settings";
-import { Direction } from "game/entities/types";
+import { MAP } from "pacman/settings";
+import { Direction } from "pacman/entities/types";
 import { Board } from "./types";
-import { board1 } from "game/levels";
+import { board1 } from "pacman/game/levels";
 
 // TODO: Find better way for initCells() and assignCellsElement()
 
