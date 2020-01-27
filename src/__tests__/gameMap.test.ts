@@ -73,7 +73,8 @@ describe("getPathToDirectionFromCellId()", () => {
 describe("Bonus", () => {
   const game = new Game();
   describe("Class Bonus", () => {
-    const bonus = new Bonus(game.cells[19], "SIMPLE");
+    const simpleBonus = new Bonus(game.cells[19], "SIMPLE");
+    const bigBonus = new Bonus(game.cells[19], "BIG");
   });
   describe("initBonus()", () => {
     test("Output length of 2 small + 1 big = 3", () => {

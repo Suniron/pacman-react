@@ -26,6 +26,16 @@ export class Cell {
     this.width = width;
     this.height = height;
   }
+
+  // -- GETTERS --
+  get isFree() {
+    // TODO: Check if entitie is on this cell:
+    if (this.element === 1) {
+      return false;
+    }
+
+    return true;
+  }
 }
 
 // -- FUNCTIONS --
@@ -57,6 +67,18 @@ const assignCellsElement = (cells: Array<Cell>, levelBoard: Board) => {
     tempCells.push(c);
   }
   return tempCells;
+};
+
+export const getAllfreeCells = (cells: Array<Cell>) => {
+  const freeCells: Array<Cell> = [];
+
+  cells.forEach(cell => {
+    if (cell.isFree()) {
+      return cell;
+    }
+  });
+
+  return freeCells;
 };
 
 // TODO: FIND A CORRECTION:

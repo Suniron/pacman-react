@@ -41,7 +41,7 @@ export const initBonus = (
 ) => {
   const bonuses = [];
   // Check if simple+big > cells.length
-  if (cells.length > nbBigBonuses + nbSimpleBonuses) {
+  if (cells.length < nbBigBonuses + nbSimpleBonuses) {
     return [];
     //throw new Error("Empty cells must be more or equal than bonuses");
   }
@@ -59,6 +59,5 @@ export const initBonus = (
     bonuses.push(new BigBonus(shufflizedArray.pop()));
   }
 
-  console.log(bonuses);
   return bonuses;
 };
